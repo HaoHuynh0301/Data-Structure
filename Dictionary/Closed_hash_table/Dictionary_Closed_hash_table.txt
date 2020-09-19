@@ -1,0 +1,117 @@
+
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+#define B 20
+#define Delete -1
+#define Empty -2
+typedef int ElementType;
+typedef ElementType Dictionary[B];
+
+int h(int &x) {
+    return x%B;
+}
+
+void makenull_list(Dictionary &D) {
+    for(int i=1;i<=B;i++) {
+        D[i]=Empty;
+    }
+}
+
+int Locate(Dictionary &D, int &x) {
+    int ini, i=0;
+    ini=h(x);
+    while (i<B && (D[(ini+i*i)%B]!=x) && D[(ini+i*i)%B]!=Empty){
+        ++i;
+    }
+    return (ini+i*i)%B;
+}
+
+int Locate1(Dictionary &D, int &x) {
+    int ini, i=0;
+    ini=h(x);
+    while (i<B && D[(ini+i*i)%B]!=x && D[(ini+i*i)%B]!=Empty && D[(ini+i*i)%B]!=Delete) {
+        i++;
+    }
+    return (ini+i*i)%B;
+}
+
+void memeber_Dictionary(Dictionary &D, int &x) {
+    cout<<"\t\t\t\t\tInput the number that you want to check: "; cin>>x; cout<<endl<<endl;
+    int bucket;
+    bucket=Locate(D, x);
+    if(D[bucket]==x) {
+        cout<<"\t\t\t\t\tThis number is existed !"<<endl<<endl;
+    }
+    else {
+        cout<<"\t\t\t\t\tThis number is not existed !"<<endl<<endl;
+    }
+}
+void Insert_Set(Dictionary &D, int &x) {
+    cout<<"\t\t\t\t\tInput the number you want: "; cin>>x; cout<<endl<<endl;
+    int bucket;
+    if(D[Locate(D, x)]!=x) {
+        bucket=Locate1(D, x);
+        if(D[bucket]!=Empty || D[bucket]!=Delete) {
+            D[bucket]=x;
+        }
+    }
+}
+
+void Delete_Set(Dictionary &D, int &x) {
+    cout<<"\t\t\t\tInput the number that you want to delete from Dictionary: "; cin>>x; cout<<endl<<endl;
+    int bucket;
+    bucket=Locate(D, x);
+    if(D[bucket]==x) {
+        D[bucket]=Delete;
+    }
+}
+void read_Set(Dictionary &D) {
+    int x;
+    int Size; cout<<"\t\t\t\t\tInput the size of Set: "; cin>>Size; cout<<endl<<endl;
+    for(int i=1;i<=Size;i++) {
+        Insert_Set(D, x);
+    }
+}
+
+void print_Set(Dictionary &D) {
+    cout<<"\t\t\t\t\t";
+    for(int i=1;i<=B;i++) {
+        if(D[i]==-2) {
+            cout<<"*\t";
+            continue;
+        }
+        cout<<D[i]<<"\t";
+    }
+    cout<<endl<<endl;
+}
+int main () {
+    Dictionary D;
+    int x, selection;
+    char choice;
+    cout<<"\t\t\t\t\t\t=== DICTIONARY ==="<<endl<<endl;
+    makenull_list(D);
+    read_Set(D);
+    do {
+        cout<<"\t\t\t\t\t=== SELECTIONS ==="<<endl<<endl;
+        cout<<"\t\t\t\t\tPress 1: Insert new number to Dictionary"<<endl<<endl;
+        cout<<"\t\t\t\t\tPress 0: Print the Set"<<endl<<endl;
+        cout<<"\t\t\t\t\tPress 2: Delete the number from Set"<<endl<<endl;
+        cout<<"\t\t\t\t\tPress 3: Check the number"<<endl<<endl;
+        cout<<"\t\t\t\t\tInput your selection: "; cin>>selection; cout<<endl;
+        if(selection == 1) {
+            Insert_Set(D, x);
+        }
+        else if(selection == 0) {
+            print_Set(D);
+        }
+        else if(selection == 2) {
+            Delete_Set(D, x);
+        }
+        else if(selection == 3) {
+            memeber_Dictionary(D, x);
+        }
+        cout<<"\t\t\t\t\tDo you want to continue ? ( y/n ): "; cin>>choice;
+    } while (choice == 'y');
+    return 0;
+}
